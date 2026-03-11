@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>김낑깡 – 웹 명함</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #111;
+      --card-bg: #181818;
+      --accent: #ffffff;
+      --muted: #888888;
+      --border: #2a2a2a;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Pretendard",
+        "Noto Sans KR", sans-serif;
+      background: radial-gradient(circle at top, #222 0, #000 55%, #000 100%);
+      color: var(--accent);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      background: radial-gradient(circle at top left, #202020 0, #111 55%);
+      border-radius: 24px;
+      padding: 28px 26px 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(14px);
+      isolation: isolate;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255,255,255,0.06), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(255,255,255,0.04), transparent 55%);
+      mix-blend-mode: screen;
+      opacity: 0.7;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 6px 10px 5px;
+      margin-bottom: 18px;
+      background: rgba(0,0,0,0.4);
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #fff;
+    }
+
+    .top {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      width: 96px;
+      height: 96px;
+      flex-shrink: 0;
+    }
+
+    .avatar-circle {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #444, #1c1c1c 55%, #111);
+      border: 1px solid #3a3a3a;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .avatar-face {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #2a2a2a 0, #1e1e1e 55%, #181818);
+      border: 1px solid #333;
+    }
+
+    .avatar-hair {
+      position: absolute;
+      top: 8px;
+      left: 6px;
+      right: 6px;
+      height: 26px;
+      background: #050505;
+      border-bottom-left-radius: 50px 38px;
+      border-bottom-right-radius: 52px 32px;
+      border-top-left-radius: 32px;
+      border-top-right-radius: 48px;
+    }
+
+    .avatar-hair::before {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: 12px;
+      width: 22px;
+      height: 16px;
+      border-radius: 50%;
+      border: 3px solid #050505;
+      border-color: #050505 transparent transparent transparent;
+      transform: rotate(-18deg);
+    }
+
+    .avatar-eyes {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      width: 36px;
+      margin-left: -18px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .eye {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #000;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .eye::before {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: 2px;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.7);
+    }
+
+    .avatar-brows {
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      width: 40px;
+      margin-left: -20px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .brow {
+      width: 14px;
+      height: 3px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.85);
+    }
+
+    .brow.left {
+      transform: translateY(-1px) rotate(-5deg);
+    }
+
+    .brow.right {
+      transform: translateY(-1px) rotate(5deg);
+    }
+
+    .avatar-mouth {
+      position: absolute;
+      top: 46px;
+      left: 50%;
+      width: 20px;
+      height: 10px;
+      margin-left: -10px;
+      border-bottom-left-radius: 14px;
+      border-bottom-right-radius: 14px;
+      border-top-left-radius: 40px;
+      border-top-right-radius: 40px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-top: 1px solid transparent;
+    }
+
+    .avatar-neck {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 24px;
+      height: 13px;
+      margin-left: -12px;
+      background: linear-gradient(180deg, #181818, #141414);
+      border-radius: 10px 10px 4px 4px;
+    }
+
+    .avatar-shirt {
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      width: 52px;
+      height: 20px;
+      margin-left: -26px;
+      background: linear-gradient(180deg, #1a1a1a, #050505);
+      border-radius: 22px 22px 6px 6px;
+      box-shadow: 0 -2px 0 rgba(255,255,255,0.04);
+    }
+
+    .avatar-shirt::before,
+    .avatar-shirt::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      width: 12px;
+      height: 14px;
+      border-radius: 50%;
+      background: #050505;
+    }
+
+    .avatar-shirt::before {
+      left: -6px;
+    }
+
+    .avatar-shirt::after {
+      right: -6px;
+    }
+
+    .avatar-orbit {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255,255,255,0.12);
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .avatar-wrap:hover .avatar-orbit {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .info-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .name {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .role {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .tagline {
+      font-size: 13px;
+      color: #d7d7d7;
+      line-height: 1.6;
+    }
+
+    .tagline span {
+      color: var(--muted);
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #444, transparent);
+      margin: 18px 0 16px;
+      opacity: 0.7;
+    }
+
+    .bottom-section {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .contact {
+      display: grid;
+      gap: 4px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      margin-bottom: -2px;
+    }
+
+    .email,
+    .phone {
+      color: #f5f5f5;
+      white-space: nowrap;
+    }
+
+    .email a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(255,255,255,0.24);
+      padding-bottom: 1px;
+    }
+
+    .email a:hover {
+      border-bottom-style: solid;
+    }
+
+    .phone a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 28px 80px rgba(0,0,0,0.8);
+    }
+
+    .card:active {
+      transform: translateY(0);
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 24px 18px 18px;
+        border-radius: 20px;
+      }
+
+      .top {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
+      .avatar-wrap {
+        width: 88px;
+        height: 88px;
+      }
+
+      .name {
+        font-size: 21px;
+      }
+
+      .bottom-section {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      <span>Personal Web Card</span>
+    </div>
+
+    <div class="top">
+      <div class="avatar-wrap" id="avatar">
+        <div class="avatar-circle">
+          <div class="avatar-face">
+            <div class="avatar-hair"></div>
+            <div class="avatar-brows">
+              <div class="brow left"></div>
+              <div class="brow right"></div>
+            </div>
+            <div class="avatar-eyes">
+              <div class="eye left"></div>
+              <div class="eye right"></div>
+            </div>
+            <div class="avatar-mouth"></div>
+            <div class="avatar-neck"></div>
+            <div class="avatar-shirt"></div>
+          </div>
+        </div>
+        <div class="avatar-orbit"></div>
+      </div>
+
+      <div class="info-main">
+        <div class="name">김낑깡</div>
+        <div class="role">@gggingggganggg</div>
+        <div class="tagline">
+          원하는 것에 흔들리지 않고 차분히 나아가는 사람.
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="bottom-section">
+      <div class="contact">
+        <div class="label">Contact</div>
+        <div class="email">
+          <a href="mailto:gggingggganggg@gmail.com">gggingggganggg@gmail.com</a>
+        </div>
+        <div class="phone">
+          <a href="https://www.youtube.com/@%EB%82%91%EA%B9%A1-k6p7p">https://www.youtube.com/@%EB%82%91%EA%B9%A1-k6p7p</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const card = document.getElementById("card");
+      const avatar = document.getElementById("avatar");
+      const eyes = avatar.querySelectorAll(".eye");
+      let blinkTimeout;
+
+      function blink(duration = 120) {
+        eyes.forEach((eye) => {
+          eye.style.height = "2px";
+          eye.style.borderRadius = "999px";
+        });
+        clearTimeout(blinkTimeout);
+        blinkTimeout = setTimeout(() => {
+          eyes.forEach((eye) => {
+            eye.style.height = "9px";
+            eye.style.borderRadius = "50%";
+          });
+        }, duration);
+      }
+
+      function scheduleBlink() {
+        const delay = 2000 + Math.random() * 4000;
+        setTimeout(() => {
+          blink();
+          scheduleBlink();
+        }, delay);
+      }
+      scheduleBlink();
+
+      card.addEventListener("click", () => {
+        card.style.boxShadow = "0 28px 80px rgba(255,255,255,0.08)";
+        blink(180);
+        setTimeout(() => {
+          card.style.boxShadow = "0 28px 80px rgba(0,0,0,0.8)";
+        }, 180);
+      });
+    })();
+  </script>
+</body>
+</html>
